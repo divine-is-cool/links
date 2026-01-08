@@ -123,6 +123,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve the root index.html so GET '/' works (fixes "Cannot GET '/'")
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // API: get folders & links
 app.get('/divine/api/sites/links', async (req, res) => {
   const data = await loadData();
