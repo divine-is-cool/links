@@ -1,0 +1,142 @@
+:root{
+  --gold: #FFD700;
+  --deep-purple: #6d2bd6;
+  --purple-accent: #a34bff;
+  --banner-blue: #238FD9;
+  --dark-bg: #07040a;
+  --panel-bg: rgba(255,255,255,0.02);
+  --muted: rgba(255,255,255,0.65);
+  --tile-radius: 12px;
+  --gap: 18px;
+  --max-width: 980px;
+}
+
+* { box-sizing: border-box; }
+html,body{ height:100%; margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:var(--gold); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background:var(--dark-bg); }
+
+/* Announcement banner */
+.announcement{
+  position: sticky;
+  top:0;
+  left:0;
+  right:0;
+  height:64px;
+  background: var(--banner-blue);
+  color: var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  z-index:80;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+/* Container */
+.container{
+  max-width: var(--max-width);
+  margin: 20px auto 40px;
+  padding: 24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: var(--gap);
+  position: relative;
+  z-index: 10;
+}
+
+/* Portal container (panel) */
+.portal-container {
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+}
+
+/* Header */
+.portal-header { text-align:center; margin-top:2px; }
+.portal-title { margin:0; font-size:1.5rem; color:var(--gold); font-weight:900; }
+.portal-sub { margin:6px 0 0; color:var(--muted); font-weight:600; }
+
+/* Links area */
+.links-area { width:100%; display:flex; flex-direction:column; gap:14px; margin-top:10px; }
+
+/* Folder card */
+.folder {
+  background: var(--panel-bg);
+  border-radius: var(--tile-radius);
+  padding: 12px;
+  color: var(--gold);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.folder h3 { margin:0; font-size:1.05rem; color:var(--gold); font-weight:800; }
+
+/* Link row */
+.link-row {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px;
+  border-radius:10px;
+  transition: background .12s ease, transform .12s ease;
+}
+.link-row:hover { transform: translateY(-4px); background: rgba(255,255,255,0.01); }
+
+.link-meta { display:flex; flex-direction:column; gap:4px; }
+.link-name { font-weight:800; color:var(--gold); }
+.link-url { color:var(--muted); font-size:0.92rem; word-break:break-all; }
+
+/* Visit button */
+.visit-btn {
+  padding:8px 12px;
+  border-radius:10px;
+  border:none;
+  background: linear-gradient(135deg, var(--purple-accent), var(--deep-purple));
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.55);
+}
+.visit-btn[disabled] { opacity:0.5; cursor:not-allowed; transform:none; }
+
+/* Admin badge */
+.admin-badge {
+  position:absolute; right:14px; top:14px;
+  padding:6px 10px; border-radius:999px;
+  background: rgba(255,255,255,0.02); color:var(--gold); font-weight:800; font-size:0.85rem;
+}
+
+/* Notices / loading */
+.loading, .notice { padding:10px; border-radius:8px; background: rgba(255,255,255,0.02); color:var(--muted); }
+
+/* Admin modal */
+.admin-overlay {
+  position:fixed; inset:0; background: rgba(0,0,0,0.6);
+  display:flex; align-items:center; justify-content:center; z-index:120;
+}
+.admin-modal {
+  width:880px; max-width:94%; max-height:88vh; overflow:auto;
+  background: linear-gradient(180deg, #0b0615, #13081d);
+  border-radius:12px; padding:18px; color:var(--gold);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+}
+.admin-modal h2 { margin-top:0; }
+.form-row { display:flex; gap:8px; margin:8px 0; align-items:center; }
+.form-row input, .form-row select, .form-row textarea {
+  padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02); color:var(--gold); flex:1;
+}
+.link-btn { padding:8px 12px; border-radius:10px; border:none; background: linear-gradient(135deg,var(--purple-accent),var(--deep-purple)); color:white; font-weight:800; cursor:pointer; }
+.danger { background: linear-gradient(180deg,#b32b2b,#7d1212); }
+.muted { opacity:0.8; color:var(--muted); }
+.small { font-size:0.92rem; }
+
+/* Responsive */
+@media (max-width:720px){
+  .admin-modal { padding:12px; }
+  .portal-title { font-size:1.25rem; }
+}
