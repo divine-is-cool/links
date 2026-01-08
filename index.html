@@ -5,22 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Link Portal — Divine</title>
 
-  <!-- Early cookie check so unauthorized users are redirected quickly -->
-  <script>
-  (function(){
-    try {
-      var has = document.cookie.split(';').some(function(c){ return c.trim().indexOf('divine_access=') === 0; });
-    } catch (e) {
-      var has = false;
-    }
-    if (!has) {
-      location.replace('/404.html' + location.search + location.hash);
-    }
-  })();
-  </script>
-
-  <link rel="icon" href="/divine/assets/divine-fav.png" />
-  <link rel="stylesheet" href="/divine/sites/styles.css" />
+  <link rel="icon" href="assets/divine-fav.png" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="dark">
   <div class="announcement" role="banner" aria-live="polite">
@@ -49,7 +35,6 @@
   </footer>
 
   <!-- Core site script (theme / shortcuts) + this page's script -->
-  <script src="/divine/script.js"></script>
-  <script src="/divine/sites/script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
