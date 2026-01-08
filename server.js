@@ -1,31 +1,20 @@
 /**
  * server.js
  *
- * Minimal Express server to power the Link Portal for /divine/sites.
- * - Serves static files under /divine (so your existing static site works)
+ * Minimal Express server to power the Link Portal.
+ *
+ * - Serves static files from project root (index.html, styles.css, script.js, etc.)
  * - Implements JSON-backed persistence in data.json for folders/links and claim timers
  * - Identifies visitors via an HttpOnly cookie (divine_uid)
  * - Enforces a 7-day-per-user claim cooldown (server-side)
- * - Admin flows:
- *     POST /divine/admin/sites/verify-pin        { pin }            -> sets server session if correct
- *     POST /divine/admin/sites/add-folder        { title }          -> requires admin session
- *     POST /divine/admin/sites/remove-folder     { id }             -> requires admin session
- *     POST /divine/admin/sites/add-link          { folderId, name, url } -> requires admin session
- *     POST /divine/admin/sites/remove-link       { id }             -> requires admin session
- *     POST /divine/admin/sites/clear-my-timer    {}                 -> requires admin session (clears user's 7-day timer)
- *
- * Client-side expects:
- *  GET  /divine/api/sites/links  -> JSON list of folders
- *  POST /divine/api/sites/claim  -> body { id } -> 200 { ok:true, url } | 429 { ok:false, retryAfter } | 404
+ * - Admin flows (API endpoints for admin actions)
  *
  * Environment:
  *  - ADMIN_PIN                 (required to administer)
  *  - ADMIN_SESSION_SECRET      (recommended, for express-session; fallback created if missing)
- *  - PORT                     (optional, default 3000)
+ *  - PORT                      (optional, default 3000)
  *
  * Data persistence file: ./data.json (created if missing)
- *
- * This is intentionally dependency-light and file-based so it can be deployed to Render quickly.
  */
 
 const express = require('express');
@@ -108,8 +97,9 @@ app.use(session({
   cookie: { sameSite: 'strict', httpOnly: true, secure: false } // secure should be true behind TLS in production
 }));
 
-// Serve your static files under /divine
-app.use('/divine', express.static(path.join(__dirname, 'divine')));
+// ---- KEY LINE: Serve all static files from the project root ----
+app.use(express.static(__dirname));
+// -----------------------------------------------------------------
 
 // Middleware to identify user with a cookie
 app.use((req, res, next) => {
@@ -123,10 +113,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve the root index.html so GET '/' works (fixes "Cannot GET '/'")
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+// (Optional explicit root handler - static() will serve index.html by default)
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'index.html'));
+// });
+
+// ----------------- API ROUTES BELOW ------------------
 
 // API: get folders & links
 app.get('/divine/api/sites/links', async (req, res) => {
@@ -307,6 +299,6 @@ app.use('/divine/api', (req, res) => res.status(404).json({ ok: false, message: 
 
   app.listen(PORT, () => {
     console.log(`Divine server listening on port ${PORT}`);
-    console.log('Serving static files under /divine');
+    console.log('Serving static files from project root');
   });
 })();
