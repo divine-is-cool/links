@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Link Portal — Divine</title>
+
+  <!-- Early cookie check so unauthorized users are redirected quickly -->
+  <script>
+  (function(){
+    try {
+      var has = document.cookie.split(';').some(function(c){ return c.trim().indexOf('divine_access=') === 0; });
+    } catch (e) {
+      var has = false;
+    }
+    if (!has) {
+      location.replace('/404.html' + location.search + location.hash);
+    }
+  })();
+  </script>
+
+  <link rel="icon" href="/divine/assets/divine-fav.png" />
+  <link rel="stylesheet" href="/divine/sites/styles.css" />
+</head>
+<body class="dark">
+  <div class="announcement" role="banner" aria-live="polite">
+    Link Portal — curated community links
+  </div>
+
+  <main class="container portal-container" id="portal" role="main">
+    <div class="admin-badge" id="admin-badge" aria-hidden="true">Portal</div>
+
+    <header class="portal-header" role="heading" aria-level="1">
+      <h1 class="portal-title">Link Portal</h1>
+      <p class="portal-sub">Click to visit. Links may be rate-limited — claim once every 7 days.</p>
+    </header>
+
+    <section id="links-area" class="links-area" aria-live="polite">
+      <div class="loading">Loading links…</div>
+    </section>
+
+    <div class="meta">
+      <div class="version">Site Version: 1.0.0</div>
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <p class="disclaimer">Disclaimer: for entertainment only.</p>
+  </footer>
+
+  <!-- Core site script (theme / shortcuts) + this page's script -->
+  <script src="/divine/script.js"></script>
+  <script src="/divine/sites/script.js"></script>
+</body>
+</html>
