@@ -87,7 +87,11 @@ function ensureUrlSafe(raw) {
 }
 
 const app = express();
-app.use(helmet());
+app.use(
+  helmet({
+    frameguard: false,
+  })
+);
 app.use(express.json({ limit: '16kb' }));
 app.use(cookieParser());
 app.use(session({
