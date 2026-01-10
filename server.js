@@ -1,7 +1,7 @@
 /**
  * server.js
  *
- * Minimal Express server to power the Link Portal.
+ * Minimal Express server to power the Link Portal. 
  *
  * - Serves static files from project root (index.html, styles.css, script.js, etc.)
  * - Implements JSON-backed persistence in data.json for folders/links and claim timers
@@ -9,12 +9,12 @@
  * - Enforces a 7-day-per-user claim cooldown (server-side)
  * - Admin flows (API endpoints for admin actions)
  *
- * Environment:
+ * Environment: 
  *  - ADMIN_PIN                 (required to administer)
  *  - ADMIN_SESSION_SECRET      (recommended, for express-session; fallback created if missing)
  *  - PORT                      (optional, default 3000)
  *
- * Data persistence file: ./data.json (created if missing)
+ * Data persistence file:  ./data.json (created if missing)
  */
 
 const express = require('express');
@@ -26,7 +26,7 @@ const { v4: uuidv4 } = require('uuid');
 const helmet = require('helmet');
 
 const DATA_FILE = path.join(__dirname, 'data.json');
-const ADMIN_PIN = process.env.ADMIN_PIN || '';
+const ADMIN_PIN = process. env.ADMIN_PIN || '';
 const ADMIN_SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || (Math.random().toString(36).slice(2) + Date.now());
 const PORT = parseInt(process.env.PORT || '3000', 10);
 
@@ -61,7 +61,7 @@ async function saveData(d) {
     await fs.writeFile(tmp, JSON.stringify(d, null, 2), 'utf8');
     await fs.rename(tmp, DATA_FILE);
   }).catch((err) => {
-    console.error('Error saving data.json:', err);
+    console.error('Error saving data. json:', err);
   });
   return DATA_LOCK;
 }
@@ -79,7 +79,7 @@ function ensureUrlSafe(raw) {
   try {
     const u = new URL(raw);
     if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
-    // Prevent data:, javascript: etc.
+    // Prevent data: , javascript:  etc. 
     return u.toString();
   } catch (e) {
     return null;
@@ -89,7 +89,8 @@ function ensureUrlSafe(raw) {
 const app = express();
 app.use(
   helmet({
-    frameguard: false,
+    frameguard: false, // Disable X-Frame-Options to allow iframe embedding
+    contentSecurityPolicy:  false, // Disable CSP to allow iframe embedding
   })
 );
 app.use(express.json({ limit: '16kb' }));
@@ -124,14 +125,14 @@ app.use((req, res, next) => {
 
 // ----------------- API ROUTES BELOW ------------------
 
-// API: get folders & links
+// API:  get folders & links
 app.get('/divine/api/sites/links', async (req, res) => {
   const data = await loadData();
   // respond with small shape (don't include claim info)
   const out = (data.folders || []).map(f => ({
-    id: f.id,
+    id: f. id,
     title: f.title,
-    links: (f.links || []).map(l => ({ id: l.id, name: l.name, url: l.url }))
+    links: (f.links || []).map(l => ({ id: l.id, name: l.name, url: l. url }))
   }));
   res.json(out);
 });
@@ -143,7 +144,7 @@ app.post('/divine/api/sites/claim', async (req, res) => {
 
   const data = await loadData();
   const found = await findLinkById(data, id);
-  if (!found) return res.status(404).json({ ok: false, message: 'Not found' });
+  if (!found) return res.status(404).json({ ok: false, message:  'Not found' });
 
   const userId = req.divine_uid;
   const record = data.claims[userId] || {};
@@ -185,15 +186,15 @@ function registerPinFailure(ip) {
   pinAttempts[ip] = s;
 }
 
-// Admin: verify PIN -> sets session.isAdmin true for subsequent admin calls
+// Admin:  verify PIN -> sets session. isAdmin true for subsequent admin calls
 app.post('/divine/admin/sites/verify-pin', (req, res) => {
   const ip = ipKey(req);
   if (isIpLocked(ip)) {
-    return res.status(429).json({ ok: false, message: 'Too many attempts. Try again later.' });
+    return res.status(429).json({ ok: false, message: 'Too many attempts.  Try again later.' });
   }
 
   const { pin } = req.body || {};
-  if (!pin || !ADMIN_PIN) {
+  if (!pin || ! ADMIN_PIN) {
     registerPinFailure(ip);
     return res.status(401).json({ ok: false });
   }
@@ -221,7 +222,7 @@ app.post('/divine/admin/sites/add-folder', requireAdmin, async (req, res) => {
   if (!title || !String(title).trim()) return res.status(400).json({ ok: false, message: 'title required' });
   const data = await loadData();
   const id = 'folder-' + uuidv4();
-  data.folders.push({ id, title: String(title).trim(), links: [] });
+  data.folders.push({ id, title:  String(title).trim(), links: [] });
   await saveData(data);
   res.json({ ok: true, id });
 });
@@ -251,9 +252,9 @@ app.post('/divine/admin/sites/add-link', requireAdmin, async (req, res) => {
   if (!folder) return res.status(404).json({ ok: false, message: 'folder not found' });
 
   const id = 'link-' + uuidv4();
-  const link = { id, name: String(name).trim(), url: safe };
+  const link = { id, name:  String(name).trim(), url: safe };
   folder.links = folder.links || [];
-  folder.links.push(link);
+  folder. links.push(link);
   await saveData(data);
   res.json({ ok: true, id });
 });
@@ -298,7 +299,7 @@ app.use('/divine/api', (req, res) => res.status(404).json({ ok: false, message: 
   await loadData();
 
   if (!ADMIN_PIN) {
-    console.warn('WARNING: ADMIN_PIN is not set. Administrative endpoints will always reject (set ADMIN_PIN in env).');
+    console.warn('WARNING:  ADMIN_PIN is not set. Administrative endpoints will always reject (set ADMIN_PIN in env).');
   }
 
   app.listen(PORT, () => {
